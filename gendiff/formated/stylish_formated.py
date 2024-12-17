@@ -12,7 +12,7 @@ def make_value(data, depth: int):
     for key, val in data.items():
         result += f'\n{" " * (depth + 1) * INDENT}{key}:' \
             f' {make_value(val, depth + 1)}'
-    result += f'\n{" " * depth * INDENT}}}'
+    result += f'{" " * depth * INDENT}'
     return result
 
 
