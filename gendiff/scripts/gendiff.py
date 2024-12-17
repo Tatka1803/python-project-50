@@ -4,8 +4,8 @@ from gendiff.generate_diff import generate_diff
 def parsing_arguments():
     parser = argparse.ArgumentParser(
         description='Compares two configuration files and shows a difference.')
-    parser.add_argument('file_path_1')
-    parser.add_argument('file_path_2')
+    parser.add_argument('first_file')
+    parser.add_argument('second_file')
     parser.add_argument(
         "-f",
         "--format",
@@ -17,7 +17,7 @@ def parsing_arguments():
 
 def main():
     args = parsing_arguments()
-    diff = generate_diff(args.file_path_1, args.file_path_2, args.format)
+    diff = generate_diff(args.first_file, args.second_file, args.format)
     print(diff)
 
 
