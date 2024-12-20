@@ -1,30 +1,27 @@
+from pathlib import Path
+from gendiff.gendiff import generate_diff
 import pytest
-from gendiff.generate_diff import generate_diff
-
-json_old = 'tests/fixtures/file3.json'
-json_new = 'tests/fixtures/file4.json'
-yaml_old = 'tests/fixtures/file3.yaml'
-yaml_new = 'tests/fixtures/file4.yaml'
-
-stylish = 'tests/fixtures/nested_stylish'
-plain = 'tests/fixtures/nested_plain'
-jsonn = 'tests/fixtures/json.json'
 
 
-@pytest.mark.parametrize(
-    'path1, path2, format_name, expected',
-    [
-        (json_old, json_new, 'stylish', stylish),
-        (json_old, json_new, 'plain', plain),
-        (json_old, json_new, 'json', jsonn),
-        (yaml_old, yaml_new, 'stylish', stylish),
-        (yaml_old, yaml_new, 'plain', plain),
-        (yaml_old, yaml_new, 'json', jsonn),
-
-    ]
-)
+def get_path(file_name):
+    p = Path(__file__)
+    current_dir = p.absolute().parent
+    return current_dir / 'fixtures' / file_name
 
 
-def test_generate_diff(path1, path2, format_name, expected):
-    with open(expected) as expectation:
-        assert generate_diff(path1, path2, format_name) == expectation.read()
+test_data = [
+    ('file1.json', 'file2.json', 'stylish', 'result_file1_file2'),
+    ('file1.yml', 'file2.yml', 'stylish', 'result_file1_file2'),
+    ('file3.json', 'file4.json', 'stylish', 'result_file3_file4'),
+    ('file3.yml', 'file4.yml', 'stylish', 'result_file3_file4'),
+    ('file3.json', 'file4.json', 'plain', 'result_file3_file4_plain'),
+    ('file3.yml', 'file4.yml', 'plain', 'result_file3_file4_plain'),
+    ('file3.json', 'file4.json', 'json', 'result_file3_file4_json'),
+    ('file3.yml', 'file4.yml', 'json', 'result_file3_file4_json')
+]
+
+
+@pytest.mark.parametrize('file1, file2, format_name, result_file', test_data)
+def test_flat_json(file1, file2, format_name, result_file):
+    result = open(get_path(result_file)).read()
+    assert generate_diff(get_path(file1), get_path(file2), format_name) == result
